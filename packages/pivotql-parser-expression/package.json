@@ -1,0 +1,44 @@
+{
+  "name": "pivotql-parser-expression",
+  "version": "0.0.1",
+  "description": "Parses expression to produces Pivoql ASTs.",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jrmi/pivotql.git"
+  },
+  "keywords": [
+    "query",
+    "ast",
+    "dsl",
+    "unist"
+  ],
+  "author": "Jérémie Pardou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jrmi/pivotql/issues"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.2.2"
+  },
+  "dependencies": {
+    "jison": "^0.4.18"
+  },
+  "jest": {
+    "testMatch": [
+      "**/tests/**/*.[jt]s?(x)",
+      "**/?(*.)+(spec|test).[jt]s?(x)"
+    ]
+  }
+}
