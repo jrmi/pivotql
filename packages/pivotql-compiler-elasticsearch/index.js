@@ -81,27 +81,28 @@ const generators = {
   },
   '=='(node) {
     const comparison = _extractComparison(node);
-    const _equals = {
-      term: {},
+    const symbol = _processNode(comparison.symbol);
+    const value = _processNode(comparison.value);
+    return {
+      match: {
+        [symbol]: { query: value },
+      },
     };
-    _equals.term[_processNode(comparison.symbol)] = _processNode(
-      comparison.value
-    );
-    return _equals;
   },
   '!='(node) {
     const comparison = _extractComparison(node);
-    const _nequals = {
+    const symbol = _processNode(comparison.symbol);
+    const value = _processNode(comparison.value);
+
+    return {
       bool: {
         must_not: {
-          term: {},
+          match: {
+            [symbol]: { query: value },
+          },
         },
       },
     };
-    _nequals.bool.must_not.term[_processNode(comparison.symbol)] = _processNode(
-      comparison.value
-    );
-    return _nequals;
   },
   MATCH(node) {
     const comparison = _extractComparison(node);
@@ -176,9 +177,9 @@ const _processNode = (node) => {
 
 const compile = (tree) => {
   const query = {
-    query: {},
+    query: { bool: {} },
   };
-  query.query.filter = [_processNode(tree)];
+  query.query.bool.filter = _processNode(tree);
   return query;
 };
 
