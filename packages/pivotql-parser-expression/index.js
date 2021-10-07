@@ -1,6 +1,6 @@
 'use strict';
 
-import Jison from 'jison';
+import Jison from '@lahmatiy/jison';
 
 const grammar = {
   // Lexical tokens

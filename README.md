@@ -1,8 +1,8 @@
 PivotQL (Pivot Query Language)
 =======
 
-Lets you write a simple query and run it against any datastore, like [ElasticSearch](https://github.com/honeinc/pivotql-es)
-and/or [MongoDB](https://github.com/honeinc/pivotql-mongodb).
+Lets you write a simple query and run it against any datastore, like [ElasticSearch](https://github.com/jrmi/pivotql/tree/master/packages/pivotql-compiler-elasticsearch)
+and/or [Mapbox filter](https://github.com/jrmi/pivotql/tree/master/packages/pivotql-compiler-mapboxgl).
 
 PivotQL parses a simple query language into an Abstract Syntax Tree implementing
 the [unist](https://github.com/syntax-tree/unist) spec that can then be used to
