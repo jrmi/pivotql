@@ -1,6 +1,6 @@
 "use strict";
 
-const compiler = require("./index.js");
+import compiler from "./index.js";
 
 describe("Basic types", () => {
   test("NUMBER", () => {

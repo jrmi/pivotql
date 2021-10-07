@@ -1,6 +1,6 @@
 "use strict";
 
-const pivotql = require("./index.js");
+import pivotql from "./index.js";
 
 describe("comparisons", () => {
   test("<", () => {
