@@ -1,6 +1,6 @@
 {
   "name": "pivotql-compiler-elasticsearch",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Compile PivotQL ASTs to Elasticsearch queries.",
   "main": "./index.js",
   "exports": {

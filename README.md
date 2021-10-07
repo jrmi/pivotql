@@ -99,6 +99,7 @@ npm > v7.14 with workspaces features to be able to execute the next commands:
 
 ```sh
 npm ci
+npm build # Generate parser with Jison
 ```
 
 And launch test:

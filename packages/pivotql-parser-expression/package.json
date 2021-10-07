@@ -1,6 +1,6 @@
 {
   "name": "pivotql-parser-expression",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Parses expression to produces Pivoql ASTs.",
   "main": "./index.js",
   "exports": {
@@ -32,7 +32,8 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.2.2",
-    "jest-esm-transformer": "^1.0.0"
+    "jest-esm-transformer": "^1.0.0",
+    "jison": "^0.4.18"
   },
   "jest": {
     "transform": {
@@ -42,8 +43,5 @@
       "**/tests/**/*.[jt]s?(x)",
       "**/?(*.)+(spec|test).[jt]s?(x)"
     ]
-  },
-  "dependencies": {
-    "jison": "^0.4.18"
   }
 }
