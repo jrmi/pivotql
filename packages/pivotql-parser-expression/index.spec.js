@@ -259,6 +259,45 @@ describe('unary minus', () => {
   });
 });
 
+describe('string', () => {
+  test('" quoted string', () => {
+    expect(pivotql('"foo"')).toEqual({
+      value: 'foo',
+      type: 'STRING',
+    });
+  });
+
+  test("' quoted string", () => {
+    expect(pivotql("'foo'")).toEqual({
+      value: 'foo',
+      type: 'STRING',
+    });
+  });
+
+  test('String with diacritics', () => {
+    expect(pivotql('"Ă ă Â â Î î Ș ș Ț ț é ù è ê î û"')).toEqual({
+      value: 'Ă ă Â â Î î Ș ș Ț ț é ù è ê î û',
+      type: 'STRING',
+    });
+  });
+});
+
+describe('symbol', () => {
+  test('Symbol alone', () => {
+    expect(pivotql('foo')).toEqual({
+      value: 'foo',
+      type: 'SYMBOL',
+    });
+  });
+
+  test('Symbol with diacritics', () => {
+    expect(pivotql('ĂăÂâÎîȘșȚțéùèêîû')).toEqual({
+      value: 'ĂăÂâÎîȘșȚțéùèêîû',
+      type: 'SYMBOL',
+    });
+  });
+});
+
 describe('expressions', () => {
   test('( foo )', () => {
     expect(pivotql('( foo )')).toEqual({
