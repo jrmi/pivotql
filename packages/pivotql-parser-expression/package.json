@@ -9,7 +9,7 @@
   },
   "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "npm run build && jest",
     "build": "node ./generate.js > ./parser.js && prettier -w ./parser.js"
   },
   "repository": {

@@ -1140,55 +1140,62 @@ var parser = (function () {
             return "==";
             break;
           case 7:
-            return "!=";
+            return "==";
             break;
           case 8:
-            return "~=";
+            return "!=";
             break;
           case 9:
-            return ">=";
+            return "~=";
             break;
           case 10:
-            return "<=";
+            return ">=";
             break;
           case 11:
-            return "<";
+            return "<=";
             break;
           case 12:
-            return ">";
+            return "<";
             break;
           case 13:
-            return "and";
+            return ">";
             break;
           case 14:
-            return "or";
+            return "and";
             break;
           case 15:
-            return "not";
+            return "or";
             break;
           case 16:
-            return "in";
+            return "not";
             break;
           case 17:
-            return "NUMBER";
+            return "in";
             break;
           case 18:
-            return "BOOLEAN";
+            return "NUMBER";
             break;
           case 19:
-            return "PRIMITIVE";
+            return "BOOLEAN";
             break;
           case 20:
-            return "SYMBOL";
+            return "PRIMITIVE";
             break;
           case 21:
+            return "SYMBOL";
+            break;
+          case 22:
             yy_.yytext = yy_.yytext.substr(1, yy_.yyleng - 2);
             return "STRING";
             break;
-          case 22:
+          case 23:
+            yy_.yytext = yy_.yytext.substr(1, yy_.yyleng - 2);
+            return "STRING";
+            break;
+          case 24:
             return "-";
             break;
-          case 23:
+          case 25:
             return "EOF";
             break;
         }
@@ -1201,6 +1208,7 @@ var parser = (function () {
         /^(?:\])/,
         /^(?:,)/,
         /^(?:==)/,
+        /^(?:=)/,
         /^(?:\!=)/,
         /^(?:~=)/,
         /^(?:>=)/,
@@ -1215,7 +1223,8 @@ var parser = (function () {
         /^(?:true|false)/,
         /^(?:null|undefined)/,
         /^(?:[a-zA-Z_][\.a-zA-Z0-9_-]*)/,
-        /^(?:"(?:[^"])*")/,
+        /^(?:"(\[\"]|[^\"])*")/,
+        /^(?:'(\[\']|[^\'])*')/,
         /^(?:-)/,
         /^(?:$)/,
       ],
@@ -1223,7 +1232,7 @@ var parser = (function () {
         INITIAL: {
           rules: [
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-            19, 20, 21, 22, 23,
+            19, 20, 21, 22, 23, 24, 25,
           ],
           inclusive: true,
         },

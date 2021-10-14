@@ -13,6 +13,7 @@ const grammar = {
       ['\\]', 'return "]";'],
       [',', 'return ",";'],
       ['==', 'return "==";'],
+      ['=', 'return "==";'],
       ['\\!=', 'return "!=";'],
       ['~=', 'return "~=";'],
       ['>=', 'return ">=";'],
@@ -28,7 +29,14 @@ const grammar = {
       ['true|false', 'return "BOOLEAN";'], // true/false
       ['null|undefined', 'return "PRIMITIVE";'],
       ['[a-zA-Z_][\\.a-zA-Z0-9_-]*', 'return "SYMBOL";'], // some.Symbol22
-      ['"(?:[^"])*"', 'yytext = yytext.substr(1, yyleng-2); return "STRING";'], // "foo"
+      [
+        '"(\\[\\"]|[^\\"])*"',
+        'yytext = yytext.substr(1, yyleng-2); return "STRING";',
+      ], // "foo"
+      [
+        "'(\\[\\']|[^\\'])*'",
+        'yytext = yytext.substr(1, yyleng-2); return "STRING";',
+      ], // 'foo'
 
       ['-', 'return "-";'],
 
@@ -36,7 +44,6 @@ const grammar = {
       ['$', 'return "EOF";'],
     ],
   },
-
   tokens: 'NUMBER BOOLEAN PRIMITIVE SYMBOL STRING [ ] ,',
 
   // Operator precedence - lowest precedence first.
@@ -114,4 +121,4 @@ const grammar = {
 
 const code = new Jison.Generator(grammar).generate();
 
-console.log(code + "\n\nexport default parser;");
+console.log(code + '\n\nexport default parser;');
