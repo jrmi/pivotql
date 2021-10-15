@@ -14,16 +14,25 @@ describe('Basic types', () => {
 describe('Basic queries', () => {
   test('foo == "bar"', () => {
     expect(compiler(parser('foo == "bar"'))).toEqual({
-      query: { bool: { filter: { match: { foo: { query: 'bar' } } } } },
+      query: {
+        bool: {
+          filter: { term: { 'foo.keyword': 'bar' } },
+        },
+      },
     });
   });
   test('foo != "bar"', () => {
     expect(compiler(parser('foo != "bar"'))).toEqual({
       query: {
         bool: {
-          filter: { bool: { must_not: { match: { foo: { query: 'bar' } } } } },
+          filter: { bool: { must_not: [{ term: { 'foo.keyword': 'bar' } }] } },
         },
       },
+    });
+  });
+  test.skip('foo', () => {
+    expect(compiler(parser('foo'))).toEqual({
+      query: { bool: { filter: { match: { foo: { query: 'bar' } } } } },
     });
   });
 });
@@ -36,8 +45,8 @@ describe('Compound queries', () => {
           filter: {
             bool: {
               must: [
-                { match: { foo: { query: 'bar' } } },
-                { bool: { must_not: { match: { foo: { query: 'baz' } } } } },
+                { term: { 'foo.keyword': 'bar' } },
+                { bool: { must_not: [{ term: { 'foo.keyword': 'baz' } }] } },
               ],
             },
           },
@@ -45,15 +54,15 @@ describe('Compound queries', () => {
       },
     });
   });
-  test('foo == "bar" or foo != "baz"', () => {
-    expect(compiler(parser('foo == "bar" or foo != "baz"'))).toEqual({
+  test('foo == "bar" or bar != 10', () => {
+    expect(compiler(parser('foo == "bar" or bar != 10'))).toEqual({
       query: {
         bool: {
           filter: {
             bool: {
               should: [
-                { match: { foo: { query: 'bar' } } },
-                { bool: { must_not: { match: { foo: { query: 'baz' } } } } },
+                { term: { 'foo.keyword': 'bar' } },
+                { bool: { must_not: [{ term: { bar: 10 } }] } },
               ],
             },
           },
@@ -70,20 +79,57 @@ describe('Compound queries', () => {
           filter: {
             bool: {
               should: [
-                { match: { foo: { query: 'bar' } } },
+                { term: { 'foo.keyword': 'bar' } },
                 {
                   bool: {
                     must: [
                       {
                         bool: {
-                          must_not: { match: { foo: { query: 'baz' } } },
+                          must_not: [{ term: { 'foo.keyword': 'baz' } }],
                         },
                       },
-                      { match: { bam: { query: 10 } } },
+                      { term: { bam: 10 } },
                     ],
                   },
                 },
               ],
+            },
+          },
+        },
+      },
+    });
+  });
+  test('foo in ["bar", "baz"]', () => {
+    expect(compiler(parser('foo in ["bar", "baz"]'))).toEqual({
+      query: {
+        bool: {
+          filter: {
+            bool: {
+              must: {
+                bool: {
+                  should: [
+                    { term: { 'foo.keyword': 'bar' } },
+                    { term: { 'foo.keyword': 'baz' } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  });
+  test('foo in [10, 20]', () => {
+    expect(compiler(parser('foo in [10, 20]'))).toEqual({
+      query: {
+        bool: {
+          filter: {
+            bool: {
+              must: {
+                bool: {
+                  should: [{ term: { foo: 10 } }, { term: { foo: 20 } }],
+                },
+              },
             },
           },
         },

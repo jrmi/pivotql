@@ -71,8 +71,9 @@ const generators = {
     const field = _processNode(node.children[0]);
     const valueList = _processNode(node.children[1]);
     const _in = { bool: { must: { bool: { should: [] } } } };
+    const prop = typeof valueList[0] === 'string' ? `${field}.keyword` : field;
     valueList.forEach((value) => {
-      _in.bool.must.bool.should.push({ match: { [field]: value } });
+      _in.bool.must.bool.should.push({ term: { [prop]: value } });
     });
     return _in;
   },
@@ -83,9 +84,10 @@ const generators = {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
+    const prop = typeof value === 'string' ? `${symbol}.keyword` : symbol;
     return {
-      match: {
-        [symbol]: { query: value },
+      term: {
+        [prop]: value,
       },
     };
   },
@@ -93,14 +95,17 @@ const generators = {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
+    const prop = typeof value === 'string' ? `${symbol}.keyword` : symbol;
 
     return {
       bool: {
-        must_not: {
-          match: {
-            [symbol]: { query: value },
+        must_not: [
+          {
+            term: {
+              [prop]: value,
+            },
           },
-        },
+        ],
       },
     };
   },
