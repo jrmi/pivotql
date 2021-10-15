@@ -30,9 +30,9 @@ describe('Basic queries', () => {
       },
     });
   });
-  test.skip('foo', () => {
+  test('foo', () => {
     expect(compiler(parser('foo'))).toEqual({
-      query: { bool: { filter: { match: { foo: { query: 'bar' } } } } },
+      query: { bool: { filter: { exists: { field: 'foo' } } } },
     });
   });
 });
@@ -130,6 +130,29 @@ describe('Compound queries', () => {
                   should: [{ term: { foo: 10 } }, { term: { foo: 20 } }],
                 },
               },
+            },
+          },
+        },
+      },
+    });
+  });
+  test('foo and (bar or baz)', () => {
+    expect(compiler(parser('foo and (bar or baz)'))).toEqual({
+      query: {
+        bool: {
+          filter: {
+            bool: {
+              must: [
+                { exists: { field: 'foo' } },
+                {
+                  bool: {
+                    should: [
+                      { exists: { field: 'bar' } },
+                      { exists: { field: 'baz' } },
+                    ],
+                  },
+                },
+              ],
             },
           },
         },

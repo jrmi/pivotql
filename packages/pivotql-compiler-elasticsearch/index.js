@@ -45,7 +45,12 @@ const generators = {
   BOOLEAN: _identity,
   PRIMITIVE: _identity,
   STRING: _identity,
-  SYMBOL: _identity,
+  SYMBOL(node) {
+    if (node.alone) {
+      return { exists: { field: node.value } };
+    }
+    return node.value;
+  },
 
   '-'(node) {
     return -_firstChild(node).value;

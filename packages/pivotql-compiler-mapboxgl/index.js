@@ -13,7 +13,12 @@ const generators = {
   BOOLEAN: _identity,
   PRIMITIVE: _identity,
   STRING: _identity,
-  SYMBOL: (node) => ['get', _identity(node)],
+  SYMBOL: (node) => {
+    if (node.alone) {
+      return ['has', _identity(node)];
+    }
+    return ['get', _identity(node)];
+  },
 
   '-'(node) {
     return -_firstChild(node).value;
