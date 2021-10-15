@@ -1,6 +1,6 @@
 {
   "name": "pivotql-compiler-mapboxgl",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Compile PivotQL ASTs to mapbox filter queries.",
   "main": "./index.js",
   "exports": {

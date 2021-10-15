@@ -1,6 +1,6 @@
 {
   "name": "pivotql-parser-expression",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Parses expression to produces Pivoql ASTs.",
   "main": "./index.js",
   "exports": {
