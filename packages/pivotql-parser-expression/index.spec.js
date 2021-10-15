@@ -137,10 +137,12 @@ describe('logical operators', () => {
     expect(pivotql('foo and bar')).toEqual({
       children: [
         {
+          alone: true,
           value: 'foo',
           type: 'SYMBOL',
         },
         {
+          alone: true,
           value: 'bar',
           type: 'SYMBOL',
         },
@@ -153,10 +155,12 @@ describe('logical operators', () => {
     expect(pivotql('foo or bar')).toEqual({
       children: [
         {
+          alone: true,
           value: 'foo',
           type: 'SYMBOL',
         },
         {
+          alone: true,
           value: 'bar',
           type: 'SYMBOL',
         },
@@ -220,12 +224,14 @@ describe('logical operators', () => {
     expect(pivotql('foo and not bar')).toEqual({
       children: [
         {
+          alone: true,
           value: 'foo',
           type: 'SYMBOL',
         },
         {
           children: [
             {
+              alone: true,
               value: 'bar',
               type: 'SYMBOL',
             },
@@ -285,6 +291,7 @@ describe('string', () => {
 describe('symbol', () => {
   test('Symbol alone', () => {
     expect(pivotql('foo')).toEqual({
+      alone: true,
       value: 'foo',
       type: 'SYMBOL',
     });
@@ -292,6 +299,7 @@ describe('symbol', () => {
 
   test('Symbol with diacritics', () => {
     expect(pivotql('ĂăÂâÎîȘșȚțéùèêîû')).toEqual({
+      alone: true,
       value: 'ĂăÂâÎîȘșȚțéùèêîû',
       type: 'SYMBOL',
     });
@@ -303,6 +311,7 @@ describe('expressions', () => {
     expect(pivotql('( foo )')).toEqual({
       children: [
         {
+          alone: true,
           value: 'foo',
           type: 'SYMBOL',
         },
@@ -317,10 +326,12 @@ describe('expressions', () => {
         {
           children: [
             {
+              alone: true,
               value: 'foo',
               type: 'SYMBOL',
             },
             {
+              alone: true,
               value: 'bar',
               type: 'SYMBOL',
             },
@@ -340,10 +351,12 @@ describe('expressions', () => {
             {
               children: [
                 {
+                  alone: true,
                   value: 'foo',
                   type: 'SYMBOL',
                 },
                 {
+                  alone: true,
                   value: 'bar',
                   type: 'SYMBOL',
                 },
@@ -354,6 +367,7 @@ describe('expressions', () => {
           type: 'EXPRESSION',
         },
         {
+          alone: true,
           value: 'baz',
           type: 'SYMBOL',
         },
@@ -372,10 +386,12 @@ describe('expressions', () => {
                 {
                   children: [
                     {
+                      alone: true,
                       value: 'foo',
                       type: 'SYMBOL',
                     },
                     {
+                      alone: true,
                       value: 'bar',
                       type: 'SYMBOL',
                     },
@@ -386,6 +402,7 @@ describe('expressions', () => {
               type: 'EXPRESSION',
             },
             {
+              alone: true,
               value: 'baz',
               type: 'SYMBOL',
             },
@@ -407,10 +424,12 @@ describe('expressions', () => {
                 {
                   children: [
                     {
+                      alone: true,
                       value: 'foo',
                       type: 'SYMBOL',
                     },
                     {
+                      alone: true,
                       value: 'bar',
                       type: 'SYMBOL',
                     },
@@ -425,10 +444,12 @@ describe('expressions', () => {
                 {
                   children: [
                     {
+                      alone: true,
                       value: 'baz',
                       type: 'SYMBOL',
                     },
                     {
+                      alone: true,
                       value: 'yak',
                       type: 'SYMBOL',
                     },

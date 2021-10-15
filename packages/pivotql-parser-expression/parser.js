@@ -203,7 +203,9 @@ var parser = (function () {
       var $0 = $$.length - 1;
       switch (yystate) {
         case 1:
-          return $$[$0 - 1];
+          return $$[$0 - 1].type === "SYMBOL"
+            ? { ...$$[$0 - 1], alone: true }
+            : $$[$0 - 1];
           break;
         case 2:
           this.$ = {
@@ -245,16 +247,37 @@ var parser = (function () {
           this.$ = { type: "-", children: [$$[$0]] };
           break;
         case 12:
-          this.$ = { type: "&&", children: [$$[$0 - 2], $$[$0]] };
+          this.$ = {
+            type: "&&",
+            children: [
+              $$[$0 - 2].type === "SYMBOL"
+                ? { ...$$[$0 - 2], alone: true }
+                : $$[$0 - 2],
+              $$[$0].type === "SYMBOL" ? { ...$$[$0], alone: true } : $$[$0],
+            ],
+          };
           break;
         case 13:
-          this.$ = { type: "||", children: [$$[$0 - 2], $$[$0]] };
+          this.$ = {
+            type: "||",
+            children: [
+              $$[$0 - 2].type === "SYMBOL"
+                ? { ...$$[$0 - 2], alone: true }
+                : $$[$0 - 2],
+              $$[$0].type === "SYMBOL" ? { ...$$[$0], alone: true } : $$[$0],
+            ],
+          };
           break;
         case 14:
           this.$ = { type: "IN", children: [$$[$0 - 2], $$[$0]] };
           break;
         case 15:
-          this.$ = { type: "!", children: [$$[$0]] };
+          this.$ = {
+            type: "!",
+            children: [
+              $$[$0].type === "SYMBOL" ? { ...$$[$0], alone: true } : $$[$0],
+            ],
+          };
           break;
         case 16:
           this.$ = { type: "==", children: [$$[$0 - 2], $$[$0]] };
@@ -278,7 +301,14 @@ var parser = (function () {
           this.$ = { type: ">", children: [$$[$0 - 2], $$[$0]] };
           break;
         case 23:
-          this.$ = { type: "EXPRESSION", children: [$$[$0 - 1]] };
+          this.$ = {
+            type: "EXPRESSION",
+            children: [
+              $$[$0 - 1].type === "SYMBOL"
+                ? { ...$$[$0 - 1], alone: true }
+                : $$[$0 - 1],
+            ],
+          };
           break;
         case 24:
         case 25:

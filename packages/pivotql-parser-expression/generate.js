@@ -68,7 +68,7 @@ const grammar = {
   bnf: {
     expressions: [
       // Entry point
-      ['e EOF', 'return $1;'],
+      ['e EOF', 'return $1.type === "SYMBOL" ? {...$1, alone: true}: $1;'],
     ],
 
     VALUE: [
@@ -103,10 +103,10 @@ const grammar = {
           prec: 'UMINUS',
         },
       ],
-      ['e and e', '$$ = { type: "&&", children: [ $1, $3 ] };'],
-      ['e or e', '$$ = { type: "||", children: [ $1, $3 ] };'],
+      ['e and e', '$$ = { type: "&&", children: [ $1.type === "SYMBOL" ? {...$1, alone: true}: $1, $3.type === "SYMBOL" ? {...$3, alone: true}: $3 ] };'],
+      ['e or e', '$$ = { type: "||", children: [ $1.type === "SYMBOL" ? {...$1, alone: true}: $1, $3.type === "SYMBOL" ? {...$3, alone: true}: $3 ] };'],
       ['e in e', '$$ = { type: "IN", children: [ $1, $3 ] };'],
-      ['not e', '$$ = { type: "!", children: [ $2 ] };'],
+      ['not e', '$$ = { type: "!", children: [ $2.type === "SYMBOL" ? {...$2, alone: true}: $2 ] };'],
       ['e == e', '$$ = { type: "==", children: [ $1, $3 ] };'],
       ['e != e', '$$ = { type: "!=", children: [ $1, $3 ] };'],
       ['e ~= e', '$$ = { type: "MATCH", children: [ $1, $3 ] };'],
@@ -114,7 +114,7 @@ const grammar = {
       ['e >= e', '$$ = { type: ">=", children: [ $1, $3 ] };'],
       ['e < e', '$$ = { type: "<", children: [ $1, $3 ] };'],
       ['e > e', '$$ = { type: ">", children: [ $1, $3 ] };'],
-      ['( e )', '$$ = { type: "EXPRESSION", children: [ $2 ] };'],
+      ['( e )', '$$ = { type: "EXPRESSION", children: [ $2.type === "SYMBOL" ? {...$2, alone: true}: $2 ] };'],
 
       ['ARRAY', '$$ = $1;'],
       ['VALUE', '$$ = $1;'],
