@@ -5,6 +5,7 @@
     "packages/**"
   ],
   "scripts": {
+    "build": "npm run build -ws",
     "test": "npm run test -ws",
     "lint": "eslint packages/"
   },

@@ -30,6 +30,22 @@ describe('Basic queries', () => {
       },
     });
   });
+  test('foo <= 42 and foo >= 12', () => {
+    expect(compiler(parser('foo <= 42 and foo >= 12'))).toEqual({
+      query: {
+        bool: {
+          filter: {
+            bool: {
+              must: [
+                { range: { foo: { lte: 42 } } },
+                { range: { foo: { gte: 12 } } },
+              ],
+            },
+          },
+        },
+      },
+    });
+  });
   test('foo', () => {
     expect(compiler(parser('foo'))).toEqual({
       query: { bool: { filter: { exists: { field: 'foo' } } } },
@@ -92,6 +108,35 @@ describe('Compound queries', () => {
                     ],
                   },
                 },
+              ],
+            },
+          },
+        },
+      },
+    });
+  });
+  test('(foo == "bar" or foo != "baz") and bam == 10', () => {
+    expect(
+      compiler(parser('(foo == "bar" or foo != "baz") and bam == 10'))
+    ).toEqual({
+      query: {
+        bool: {
+          filter: {
+            bool: {
+              must: [
+                {
+                  bool: {
+                    should: [
+                      { term: { 'foo.keyword': 'bar' } },
+                      {
+                        bool: {
+                          must_not: [{ term: { 'foo.keyword': 'baz' } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                { term: { bam: 10 } },
               ],
             },
           },

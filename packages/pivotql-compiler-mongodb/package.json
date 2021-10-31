@@ -1,7 +1,7 @@
 {
-  "name": "pivotql-compiler-mapboxgl",
-  "version": "0.1.0",
-  "description": "Compile PivotQL ASTs to mapbox filter queries.",
+  "name": "pivotql-compiler-mongodb",
+  "version": "0.0.1",
+  "description": "Compile PivotQL ASTs to mongodb queries.",
   "main": "./index.js",
   "exports": {
     ".": "./index.js",
@@ -21,7 +21,7 @@
     "ast",
     "dsl",
     "unist",
-    "mapbox"
+    "mongodb"
   ],
   "author": "Jérémie Pardou",
   "license": "MIT",
