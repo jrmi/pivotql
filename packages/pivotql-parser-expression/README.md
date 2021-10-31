@@ -2,9 +2,28 @@
 
 Parses simple expression to generate PivotQL ASTs.
 
-See [main repository](https://github.com/jrmi/pivotql/) for more information.
+## Install
 
-# Expression Query Syntax
+```sh
+npm install pivotql-compiler-mongodb
+```
+
+## Example
+
+```js
+
+import parse from 'pivotql-parser-expression';
+import compile from 'pivotql-compiler-mongodb';
+
+const query = '( height <= 20 or favorites.color == "green" ) and firstname in ["john", "doug"]';
+
+const parsed = parse(query)
+
+// parsed can be consumed by any pivotql compiler
+
+```
+
+## Expression Query Syntax
 
 | Values          | Description                                              |
 | --------------- | -------------------------------------------------------- |
@@ -29,3 +48,7 @@ See [main repository](https://github.com/jrmi/pivotql/) for more information.
 | ( x )     | Expression                     |
 
 Operator precedence follows that of any sane language.
+
+## More information
+
+See [main repository](https://github.com/jrmi/pivotql/) for more information.
