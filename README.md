@@ -84,13 +84,15 @@ and produces this for mapbox:
 # Availble parsers
 
 - Simple expression
-- !! Your parser here! Submissions welcome! !!
+- !! Your parser here! Submissions are welcome! !!
 
 # Available Compilers
 
 - Elastic Search
 - Mapbox
-- !! Your compiler here! Submissions welcome! !!
+- MongoDB
+- Javascript
+- !! Your compiler here! Submissions are welcome! !!
 
 # Development
 

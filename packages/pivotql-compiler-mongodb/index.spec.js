@@ -11,10 +11,15 @@ describe('Basic types', () => {
 
 describe('Basic queries', () => {
   test('foo == "bar"', () => {
-    expect(compiler(parser('foo == "bar"'))).toEqual({ foo: 'bar' });
+    expect(compiler(parser('foo == "bar"'))).toEqual({ foo: { $eq: 'bar' } });
   });
   test('foo != "bar"', () => {
     expect(compiler(parser('foo != "bar"'))).toEqual({ foo: { $ne: 'bar' } });
+  });
+  test('not (foo != "bar")', () => {
+    expect(compiler(parser('not (foo != "bar")'))).toEqual({
+      $nor: [{ foo: { $ne: 'bar' } }],
+    });
   });
   test('foo > 10', () => {
     expect(compiler(parser('foo > 10'))).toEqual({ foo: { $gt: 10 } });
@@ -35,24 +40,28 @@ describe('Basic queries', () => {
 describe('Compound queries', () => {
   test('foo == "bar" and foo != "baz"', () => {
     expect(compiler(parser('foo == "bar" and foo != "baz"'))).toEqual({
-      foo: 'bar',
-      foo: { $ne: 'baz' },
+      foo: { $eq: 'bar', $ne: 'baz' },
     });
   });
   test('foo == "bar" or bar != 10', () => {
     expect(compiler(parser('foo == "bar" or bar != 10'))).toEqual({
-      $or: [{ foo: 'bar' }, { bar: { $ne: 10 } }],
+      $or: [{ foo: { $eq: 'bar' } }, { bar: { $ne: 10 } }],
     });
   });
   test('foo == "bar" or foo != "baz" and bam == 10', () => {
     expect(
       compiler(parser('foo == "bar" or foo != "baz" and bam == 10'))
-    ).toEqual({ $or: [{ foo: 'bar' }, { foo: { $ne: 'baz' }, bam: 10 }] });
+    ).toEqual({
+      $or: [{ foo: { $eq: 'bar' } }, { foo: { $ne: 'baz' }, bam: { $eq: 10 } }],
+    });
   });
   test('(foo == "bar" or foo != "baz") and bam == 10', () => {
     expect(
       compiler(parser('(foo == "bar" or foo != "baz") and bam == 10'))
-    ).toEqual({ $or: [{ foo: 'bar' }, { foo: { $ne: 'baz' } }], bam: 10 });
+    ).toEqual({
+      $or: [{ foo: { $eq: 'bar' } }, { foo: { $ne: 'baz' } }],
+      bam: { $eq: 10 },
+    });
   });
   test('foo in ["bar", "baz"]', () => {
     expect(compiler(parser('foo in ["bar", "baz"]'))).toEqual({

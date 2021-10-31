@@ -1,6 +1,11 @@
 'use strict';
 
-import deepmerge from 'deepmerge';
+var get = function (obj, path) {
+  for (var i = 0, path = path.split('.'), len = path.length; i < len; i++) {
+    obj = obj[path[i]];
+  }
+  return obj;
+};
 
 const _firstChild = (node) => {
   return node.children[0];
@@ -15,16 +20,12 @@ function _extractComparison(node) {
   node.children.forEach(function (child) {
     if (child.type === 'SYMBOL') {
       if (symbol) {
-        throw new Error(
-          'MONGODB: You can only specify one symbol in a comparison.'
-        );
+        throw new Error('JS: You can only specify one symbol in a comparison.');
       }
       symbol = child;
     } else {
       if (value) {
-        throw new Error(
-          'MONGODB: You can only specify one value in a comparison.'
-        );
+        throw new Error('JS: You can only specify one value in a comparison.');
       }
       value = child;
     }
@@ -32,7 +33,7 @@ function _extractComparison(node) {
 
   if (!(symbol && value)) {
     throw new Error(
-      'MONGODB: Invalid comparison, could not find both symbol and value.'
+      'JS: Invalid comparison, could not find both symbol and value.'
     );
   }
 
@@ -49,7 +50,7 @@ const generators = {
   STRING: _identity,
   SYMBOL(node) {
     if (node.alone) {
-      return { [node.value]: { $exists: true } };
+      return (obj) => get(obj, node.value) !== undefined;
     }
     return node.value;
   },
@@ -58,18 +59,14 @@ const generators = {
     return -_firstChild(node).value;
   },
   '&&'(node) {
-    let _and = {};
-    node.children.forEach(function (_node) {
-      _and = deepmerge(_and, _processNode(_node));
-    });
-    return _and;
+    const conditions = node.children.map((_node) => _processNode(_node));
+
+    return (obj) => conditions.every((fn) => fn(obj));
   },
   '||'(node) {
-    const _or = { $or: [] };
-    node.children.forEach(function (_node) {
-      _or.$or.push(_processNode(_node));
-    });
-    return _or;
+    const conditions = node.children.map((_node) => _processNode(_node));
+
+    return (obj) => conditions.some((fn) => fn(obj));
   },
   ARRAY(node) {
     return node.children.map(_processNode);
@@ -77,85 +74,59 @@ const generators = {
   IN(node) {
     const field = _processNode(node.children[0]);
     const valueList = _processNode(node.children[1]);
-    const _in = { [field]: { $in: [] } };
-    valueList.forEach((value) => {
-      _in[field].$in.push(value);
-    });
-    return _in;
+    return (obj) => valueList.includes(get(obj, field));
   },
   '!'(node) {
     const expr = _processNode(node.children[0]);
-    return { $nor: [expr] };
+    return (obj) => !expr(obj);
   },
   '=='(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
-    return {
-      [symbol]: { $eq: value },
-    };
+    return (obj) => get(obj, symbol) === value;
   },
   '!='(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
-
-    return {
-      [symbol]: { $ne: value },
-    };
+    return (obj) => get(obj, symbol) !== value;
   },
   MATCH(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
 
-    const _match = {
-      [symbol]: { regex: value },
-    };
-    return _match;
+    const regex = new RegExp(value);
+    return (obj) => get(obj, symbol).match(regex);
   },
   '<'(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
-    const _lt = {
-      [symbol]: { $lt: value },
-    };
-    return _lt;
+    return (obj) => get(obj, symbol) < value;
   },
   '<='(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
-    const _lte = {
-      [symbol]: { $lte: value },
-    };
-    return _lte;
+    return (obj) => get(obj, symbol) <= value;
   },
   '>'(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
-    const _gt = {
-      [symbol]: { $gt: value },
-    };
-    return _gt;
+    return (obj) => get(obj, symbol) > value;
   },
   '>='(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
-    const _gte = {
-      [symbol]: { $gte: value },
-    };
-    return _gte;
+    return (obj) => get(obj, symbol) >= value;
   },
   EXPRESSION(node) {
-    let _expression = {};
-    node.children.forEach(function (_node) {
-      _expression = deepmerge(_expression, _processNode(_node));
-    });
-    return _expression;
+    const conditions = node.children.map((_node) => _processNode(_node));
+    return (obj) => conditions.every((fn) => fn(obj));
   },
 };
 
