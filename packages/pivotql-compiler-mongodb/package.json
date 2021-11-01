@@ -1,6 +1,6 @@
 {
   "name": "pivotql-compiler-mongodb",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Compile PivotQL ASTs to mongodb queries.",
   "main": "./index.js",
   "exports": {

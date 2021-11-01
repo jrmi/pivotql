@@ -11,7 +11,12 @@ describe('Basic types', () => {
 
 describe('Basic queries', () => {
   test('foo == "bar"', () => {
-    expect(compiler(parser('foo == "bar"'))).toEqual({ foo: { $eq: 'bar' } });
+    expect(compiler(parser('foo == "bar"'))).toEqual({ foo: 'bar' });
+  });
+  test('foo == "bar" (nedb flavor)', () => {
+    expect(compiler(parser('foo == "bar"'), { flavor: 'nedb' })).toEqual({
+      foo: 'bar',
+    });
   });
   test('foo != "bar"', () => {
     expect(compiler(parser('foo != "bar"'))).toEqual({ foo: { $ne: 'bar' } });
@@ -29,7 +34,7 @@ describe('Basic queries', () => {
   });
   test('foo <= 42 and foo >= 12', () => {
     expect(compiler(parser('foo <= 42 and foo >= 12'))).toEqual({
-      foo: { $lte: 42, $gte: 12 },
+      $and: [{ foo: { $lte: 42 } }, { foo: { $gte: 12 } }],
     });
   });
   test('foo', () => {
@@ -40,27 +45,26 @@ describe('Basic queries', () => {
 describe('Compound queries', () => {
   test('foo == "bar" and foo != "baz"', () => {
     expect(compiler(parser('foo == "bar" and foo != "baz"'))).toEqual({
-      foo: { $eq: 'bar', $ne: 'baz' },
+      $and: [{ foo: 'bar' }, { foo: { $ne: 'baz' } }],
     });
   });
   test('foo == "bar" or bar != 10', () => {
     expect(compiler(parser('foo == "bar" or bar != 10'))).toEqual({
-      $or: [{ foo: { $eq: 'bar' } }, { bar: { $ne: 10 } }],
+      $or: [{ foo: 'bar' }, { bar: { $ne: 10 } }],
     });
   });
   test('foo == "bar" or foo != "baz" and bam == 10', () => {
     expect(
       compiler(parser('foo == "bar" or foo != "baz" and bam == 10'))
     ).toEqual({
-      $or: [{ foo: { $eq: 'bar' } }, { foo: { $ne: 'baz' }, bam: { $eq: 10 } }],
+      $or: [{ foo: 'bar' }, { $and: [{ foo: { $ne: 'baz' } }, { bam: 10 }] }],
     });
   });
   test('(foo == "bar" or foo != "baz") and bam == 10', () => {
     expect(
       compiler(parser('(foo == "bar" or foo != "baz") and bam == 10'))
     ).toEqual({
-      $or: [{ foo: { $eq: 'bar' } }, { foo: { $ne: 'baz' } }],
-      bam: { $eq: 10 },
+      $and: [{ $or: [{ foo: 'bar' }, { foo: { $ne: 'baz' } }] }, { bam: 10 }],
     });
   });
   test('foo in ["bar", "baz"]', () => {
@@ -75,8 +79,10 @@ describe('Compound queries', () => {
   });
   test('foo and (bar or baz)', () => {
     expect(compiler(parser('foo and (bar or baz)'))).toEqual({
-      foo: { $exists: true },
-      $or: [{ bar: { $exists: true } }, { baz: { $exists: true } }],
+      $and: [
+        { foo: { $exists: true } },
+        { $or: [{ bar: { $exists: true } }, { baz: { $exists: true } }] },
+      ],
     });
   });
 });
