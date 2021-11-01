@@ -1,6 +1,5 @@
 {
   "name": "pivotql",
-  "type": "module",
   "workspaces": [
     "packages/**"
   ],

@@ -203,26 +203,19 @@ var parser = (function () {
       var $0 = $$.length - 1;
       switch (yystate) {
         case 1:
-          return $$[$0 - 1].type === "SYMBOL"
-            ? { ...$$[$0 - 1], alone: true }
-            : $$[$0 - 1];
+          return $$[$0 - 1].type === "SYMBOL" ? { ...$$[$0 - 1], alone: true } : $$[$0 - 1];
           break;
         case 2:
           this.$ = {
             type: "NUMBER",
-            value: $$[$0].includes(".")
-              ? parseFloat($$[$0])
-              : parseInt($$[$0], 10),
+            value: $$[$0].includes(".") ? parseFloat($$[$0]) : parseInt($$[$0], 10),
           };
           break;
         case 3:
           this.$ = { type: "BOOLEAN", value: $$[$0] === "true" };
           break;
         case 4:
-          this.$ = {
-            type: "PRIMITIVE",
-            value: $$[$0] === "null" ? null : undefined,
-          };
+          this.$ = { type: "PRIMITIVE", value: $$[$0] === "null" ? null : undefined };
           break;
         case 5:
           this.$ = { type: "STRING", value: $$[$0] };
@@ -250,9 +243,7 @@ var parser = (function () {
           this.$ = {
             type: "&&",
             children: [
-              $$[$0 - 2].type === "SYMBOL"
-                ? { ...$$[$0 - 2], alone: true }
-                : $$[$0 - 2],
+              $$[$0 - 2].type === "SYMBOL" ? { ...$$[$0 - 2], alone: true } : $$[$0 - 2],
               $$[$0].type === "SYMBOL" ? { ...$$[$0], alone: true } : $$[$0],
             ],
           };
@@ -261,9 +252,7 @@ var parser = (function () {
           this.$ = {
             type: "||",
             children: [
-              $$[$0 - 2].type === "SYMBOL"
-                ? { ...$$[$0 - 2], alone: true }
-                : $$[$0 - 2],
+              $$[$0 - 2].type === "SYMBOL" ? { ...$$[$0 - 2], alone: true } : $$[$0 - 2],
               $$[$0].type === "SYMBOL" ? { ...$$[$0], alone: true } : $$[$0],
             ],
           };
@@ -274,9 +263,7 @@ var parser = (function () {
         case 15:
           this.$ = {
             type: "!",
-            children: [
-              $$[$0].type === "SYMBOL" ? { ...$$[$0], alone: true } : $$[$0],
-            ],
+            children: [$$[$0].type === "SYMBOL" ? { ...$$[$0], alone: true } : $$[$0]],
           };
           break;
         case 16:
@@ -303,11 +290,7 @@ var parser = (function () {
         case 23:
           this.$ = {
             type: "EXPRESSION",
-            children: [
-              $$[$0 - 1].type === "SYMBOL"
-                ? { ...$$[$0 - 1], alone: true }
-                : $$[$0 - 1],
-            ],
+            children: [$$[$0 - 1].type === "SYMBOL" ? { ...$$[$0 - 1], alone: true } : $$[$0 - 1]],
           };
           break;
         case 24:
@@ -700,9 +683,7 @@ var parser = (function () {
               "Parse error on line " +
               (yylineno + 1) +
               ": Unexpected " +
-              (symbol == EOF
-                ? "end of input"
-                : "'" + (this.terminals_[symbol] || symbol) + "'");
+              (symbol == EOF ? "end of input" : "'" + (this.terminals_[symbol] || symbol) + "'");
           }
           this.parseError(errStr, {
             text: lexer.match,
@@ -714,10 +695,7 @@ var parser = (function () {
         }
         if (action[0] instanceof Array && action.length > 1) {
           throw new Error(
-            "Parse Error: multiple actions possible at state: " +
-              state +
-              ", token: " +
-              symbol
+            "Parse Error: multiple actions possible at state: " + state + ", token: " + symbol
           );
         }
         switch (action[0]) {
@@ -757,15 +735,7 @@ var parser = (function () {
             }
             r = this.performAction.apply(
               yyval,
-              [
-                yytext,
-                yyleng,
-                yylineno,
-                sharedState.yy,
-                action[1],
-                vstack,
-                lstack,
-              ].concat(args)
+              [yytext, yyleng, yylineno, sharedState.yy, action[1], vstack, lstack].concat(args)
             );
             if (typeof r !== "undefined") {
               return r;
@@ -868,9 +838,7 @@ var parser = (function () {
           last_line: this.yylineno + 1,
           first_column: this.yylloc.first_column,
           last_column: lines
-            ? (lines.length === oldLines.length
-                ? this.yylloc.first_column
-                : 0) +
+            ? (lines.length === oldLines.length ? this.yylloc.first_column : 0) +
               oldLines[oldLines.length - lines.length].length -
               lines[0].length
             : this.yylloc.first_column - len,
@@ -916,13 +884,8 @@ var parser = (function () {
 
       // displays already matched input, i.e. for error messages
       pastInput: function () {
-        var past = this.matched.substr(
-          0,
-          this.matched.length - this.match.length
-        );
-        return (
-          (past.length > 20 ? "..." : "") + past.substr(-20).replace(/\n/g, "")
-        );
+        var past = this.matched.substr(0, this.matched.length - this.match.length);
+        return (past.length > 20 ? "..." : "") + past.substr(-20).replace(/\n/g, "");
       },
 
       // displays upcoming input, i.e. for error messages
@@ -931,10 +894,7 @@ var parser = (function () {
         if (next.length < 20) {
           next += this._input.substr(0, 20 - next.length);
         }
-        return (next.substr(0, 20) + (next.length > 20 ? "..." : "")).replace(
-          /\n/g,
-          ""
-        );
+        return (next.substr(0, 20) + (next.length > 20 ? "..." : "")).replace(/\n/g, "");
       },
 
       // displays the character position where the lexing error occurred, i.e. for error messages
@@ -984,8 +944,7 @@ var parser = (function () {
           last_line: this.yylineno + 1,
           first_column: this.yylloc.last_column,
           last_column: lines
-            ? lines[lines.length - 1].length -
-              lines[lines.length - 1].match(/\r?\n?/)[0].length
+            ? lines[lines.length - 1].length - lines[lines.length - 1].match(/\r?\n?/)[0].length
             : this.yylloc.last_column + match[0].length,
         };
         this.yytext += match[0];
@@ -1109,13 +1068,8 @@ var parser = (function () {
 
       // produce the lexer rule set which is active for the currently active lexer condition state
       _currentRules: function _currentRules() {
-        if (
-          this.conditionStack.length &&
-          this.conditionStack[this.conditionStack.length - 1]
-        ) {
-          return this.conditions[
-            this.conditionStack[this.conditionStack.length - 1]
-          ].rules;
+        if (this.conditionStack.length && this.conditionStack[this.conditionStack.length - 1]) {
+          return this.conditions[this.conditionStack[this.conditionStack.length - 1]].rules;
         } else {
           return this.conditions["INITIAL"].rules;
         }
@@ -1141,12 +1095,7 @@ var parser = (function () {
         return this.conditionStack.length;
       },
       options: {},
-      performAction: function anonymous(
-        yy,
-        yy_,
-        $avoiding_name_collisions,
-        YY_START
-      ) {
+      performAction: function anonymous(yy, yy_, $avoiding_name_collisions, YY_START) {
         var YYSTATE = YY_START;
         switch ($avoiding_name_collisions) {
           case 0:
@@ -1261,8 +1210,8 @@ var parser = (function () {
       conditions: {
         INITIAL: {
           rules: [
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-            19, 20, 21, 22, 23, 24, 25,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+            24, 25,
           ],
           inclusive: true,
         },
@@ -1290,10 +1239,7 @@ if (typeof require !== "undefined" && typeof exports !== "undefined") {
       console.log("Usage: " + args[0] + " FILE");
       process.exit(1);
     }
-    var source = require("fs").readFileSync(
-      require("path").normalize(args[1]),
-      "utf8"
-    );
+    var source = require("fs").readFileSync(require("path").normalize(args[1]), "utf8");
     return exports.parser.parse(source);
   };
   if (typeof module !== "undefined" && require.main === module) {

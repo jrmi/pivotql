@@ -1,7 +1,8 @@
 {
     "env": {
-        "commonjs": false,
-        "es6": true,
+        "browser": true,
+        "node": true,
+        "es2021": true,
         "jest": true
     },
     "extends": [
@@ -10,7 +11,7 @@
         "plugin:prettier/recommended"
     ],
     "parserOptions": {
-        "ecmaVersion": 2017,
+        "ecmaVersion": 2021,
         "sourceType": "script"
     },
     "rules": {
