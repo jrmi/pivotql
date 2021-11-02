@@ -1,6 +1,6 @@
 {
   "name": "pivotql-compiler-javascript",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Compile PivotQL ASTs to javascript filter function.",
   "main": "./lib/cjs/index.js",
   "module": "lib/esm/index.js",
