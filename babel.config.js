@@ -7,5 +7,8 @@ module.exports = {
       presets: ["@babel/preset-env"],
       ignore: ["**/*.spec.js"],
     },
+    test: {
+      presets: ["@babel/preset-env"],
+    },
   },
 };

@@ -2,15 +2,22 @@
   "name": "pivotql-compiler-javascript",
   "version": "0.0.1",
   "description": "Compile PivotQL ASTs to javascript filter function.",
-  "main": "./index.js",
+  "main": "./lib/cjs/index.js",
+  "module": "lib/esm/index.js",
   "exports": {
-    ".": "./index.js",
-    "./package.json": "./package.json"
+    "require": "./lib/cjs/index.js",
+    "import": "./lib/esm/index.js"
   },
-  "type": "module",
+  "files": [
+    "src",
+    "lib"
+  ],
   "scripts": {
-    "test": "jest",
-    "build": "echo \"nothing to do\""
+    "test": "BABEL_ENV=test jest",
+    "clean": "rimraf lib",
+    "build:esm": "BABEL_ENV=esmUnbundled babel --config-file ../../babel.config.js src --out-dir lib/esm --source-maps",
+    "build:cjs": "BABEL_ENV=cjs babel --config-file ../../babel.config.js src --out-dir lib/cjs --source-maps",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs"
   },
   "repository": {
     "type": "git",
@@ -43,7 +50,12 @@
   },
   "jest": {
     "transform": {
-      ".js": "jest-esm-transformer"
+      "\\.js$": [
+        "babel-jest",
+        {
+          "configFile": "../../babel.config.js"
+        }
+      ]
     },
     "transformIgnorePatterns": [
       "node_modules/(?!(pivotql-parser-expression)/)"
