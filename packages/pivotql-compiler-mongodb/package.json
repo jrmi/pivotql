@@ -61,5 +61,8 @@
       "**/tests/**/*.[jt]s?(x)",
       "**/?(*.)+(spec|test).[jt]s?(x)"
     ]
+  },
+  "dependencies": {
+    "deepmerge": "^4.2.2"
   }
 }
