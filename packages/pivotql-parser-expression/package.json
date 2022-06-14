@@ -18,6 +18,7 @@
     "build:esm": "BABEL_ENV=esmUnbundled babel --config-file ../../babel.config.js src --out-dir lib/esm --source-maps",
     "build:cjs": "BABEL_ENV=cjs babel --config-file ../../babel.config.js src --out-dir lib/cjs --source-maps",
     "build:parser": "BABEL_ENV=cjs babel-node --config-file ../../babel.config.js ./generate.js > ./src/parser.js && prettier -w ./src/parser.js",
+    "postbuild": "../../fixup.sh",
     "build": "npm run clean && npm run build:parser && npm run build:esm && npm run build:cjs"
   },
   "repository": {

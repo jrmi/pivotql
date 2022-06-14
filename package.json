@@ -1,7 +1,7 @@
 {
   "name": "pivotql",
   "workspaces": [
-    "packages/**"
+    "packages/*"
   ],
   "scripts": {
     "build": "npm run build -ws",
