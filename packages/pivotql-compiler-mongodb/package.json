@@ -58,6 +58,9 @@
         }
       ]
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(pivotql-parser-expression)/)"
+    ],
     "testMatch": [
       "**/tests/**/*.[jt]s?(x)",
       "**/?(*.)+(spec|test).[jt]s?(x)"
