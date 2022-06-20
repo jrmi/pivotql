@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
 var get = function (obj, path) {
-  for (var i = 0, path = path.split('.'), len = path.length; i < len; i++) {
+  for (var i = 0, path = path.split("."), len = path.length; i < len; i++) {
     obj = obj[path[i]];
   }
   return obj;
@@ -18,23 +18,21 @@ function _extractComparison(node) {
   let symbol = null;
   let value = null;
   node.children.forEach(function (child) {
-    if (child.type === 'SYMBOL') {
+    if (child.type === "SYMBOL") {
       if (symbol) {
-        throw new Error('JS: You can only specify one symbol in a comparison.');
+        throw new Error("JS: You can only specify one symbol in a comparison.");
       }
       symbol = child;
     } else {
       if (value) {
-        throw new Error('JS: You can only specify one value in a comparison.');
+        throw new Error("JS: You can only specify one value in a comparison.");
       }
       value = child;
     }
   });
 
   if (!(symbol && value)) {
-    throw new Error(
-      'JS: Invalid comparison, could not find both symbol and value.'
-    );
+    throw new Error("JS: Invalid comparison, could not find both symbol and value.");
   }
 
   return {
@@ -55,15 +53,15 @@ const generators = {
     return node.value;
   },
 
-  '-'(node) {
+  "-"(node) {
     return -_firstChild(node).value;
   },
-  '&&'(node) {
+  "&&"(node) {
     const conditions = node.children.map((_node) => _processNode(_node));
 
     return (obj) => conditions.every((fn) => fn(obj));
   },
-  '||'(node) {
+  "||"(node) {
     const conditions = node.children.map((_node) => _processNode(_node));
 
     return (obj) => conditions.some((fn) => fn(obj));
@@ -76,17 +74,17 @@ const generators = {
     const valueList = _processNode(node.children[1]);
     return (obj) => valueList.includes(get(obj, field));
   },
-  '!'(node) {
+  "!"(node) {
     const expr = _processNode(node.children[0]);
     return (obj) => !expr(obj);
   },
-  '=='(node) {
+  "=="(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
     return (obj) => get(obj, symbol) === value;
   },
-  '!='(node) {
+  "!="(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
@@ -100,25 +98,25 @@ const generators = {
     const regex = new RegExp(value);
     return (obj) => get(obj, symbol).match(regex);
   },
-  '<'(node) {
+  "<"(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
     return (obj) => get(obj, symbol) < value;
   },
-  '<='(node) {
+  "<="(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
     return (obj) => get(obj, symbol) <= value;
   },
-  '>'(node) {
+  ">"(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
     return (obj) => get(obj, symbol) > value;
   },
-  '>='(node) {
+  ">="(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
@@ -138,7 +136,7 @@ const _processNode = (node) => {
   return generators[node.type](node);
 };
 
-const compile = (tree) => {
+export const compile = (tree) => {
   return _processNode(tree);
 };
 

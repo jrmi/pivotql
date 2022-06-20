@@ -14,9 +14,9 @@ stored/searched. You can also use PivotQL to execute the same query against mult
 For example:
 
 ```javascript
-const parse = require( 'pivotql-parser-expression' );
-const esCompiler = require( 'pivotql-compiler-elasticsearch' );
-const mapboxCompiler = require( 'pivotql-compiler-mapbox' );
+import {parse} from 'pivotql-parser-expression';
+import {compiler as esCompiler} from 'pivotql-compiler-elasticsearch';
+import {compiler as mapboxCompiler} from 'pivotql-compiler-mapbox';
 
 // parse a pivotql query into an AST
 const queryAST = parse( '( height <= 20 or ( favorites.color == "green" and height != 25 ) ) and firstname in ["john", "doug"]' );
@@ -81,7 +81,7 @@ and produces this for mapbox:
 }
 ```
 
-# Availble parsers
+# Available parsers
 
 - Simple expression
 - !! Your parser here! Submissions are welcome! !!

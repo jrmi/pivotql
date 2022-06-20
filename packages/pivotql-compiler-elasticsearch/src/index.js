@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const _firstChild = (node) => {
   return node.children[0];
@@ -11,27 +11,21 @@ function _extractComparison(node) {
   let symbol = null;
   let value = null;
   node.children.forEach(function (child) {
-    if (child.type === 'SYMBOL') {
+    if (child.type === "SYMBOL") {
       if (symbol) {
-        throw new Error(
-          'ELASTICSEARCH: You can only specify one symbol in a comparison.'
-        );
+        throw new Error("ELASTICSEARCH: You can only specify one symbol in a comparison.");
       }
       symbol = child;
     } else {
       if (value) {
-        throw new Error(
-          'ELASTICSEARCH: You can only specify one value in a comparison.'
-        );
+        throw new Error("ELASTICSEARCH: You can only specify one value in a comparison.");
       }
       value = child;
     }
   });
 
   if (!(symbol && value)) {
-    throw new Error(
-      'ELASTICSEARCH: Invalid comparison, could not find both symbol and value.'
-    );
+    throw new Error("ELASTICSEARCH: Invalid comparison, could not find both symbol and value.");
   }
 
   return {
@@ -52,17 +46,17 @@ const generators = {
     return node.value;
   },
 
-  '-'(node) {
+  "-"(node) {
     return -_firstChild(node).value;
   },
-  '&&'(node) {
+  "&&"(node) {
     const _and = { bool: { must: [] } };
     node.children.forEach(function (_node) {
       _and.bool.must.push(_processNode(_node));
     });
     return _and;
   },
-  '||'(node) {
+  "||"(node) {
     const _or = { bool: { should: [] } };
     node.children.forEach(function (_node) {
       _or.bool.should.push(_processNode(_node));
@@ -76,31 +70,31 @@ const generators = {
     const field = _processNode(node.children[0]);
     const valueList = _processNode(node.children[1]);
     const _in = { bool: { must: { bool: { should: [] } } } };
-    const prop = typeof valueList[0] === 'string' ? `${field}.keyword` : field;
+    const prop = typeof valueList[0] === "string" ? `${field}.keyword` : field;
     valueList.forEach((value) => {
       _in.bool.must.bool.should.push({ term: { [prop]: value } });
     });
     return _in;
   },
-  '!'(node) {
+  "!"(node) {
     return { bool: { must_not: [_processNode(node.children[0])] } };
   },
-  '=='(node) {
+  "=="(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
-    const prop = typeof value === 'string' ? `${symbol}.keyword` : symbol;
+    const prop = typeof value === "string" ? `${symbol}.keyword` : symbol;
     return {
       term: {
         [prop]: value,
       },
     };
   },
-  '!='(node) {
+  "!="(node) {
     const comparison = _extractComparison(node);
     const symbol = _processNode(comparison.symbol);
     const value = _processNode(comparison.value);
-    const prop = typeof value === 'string' ? `${symbol}.keyword` : symbol;
+    const prop = typeof value === "string" ? `${symbol}.keyword` : symbol;
 
     return {
       bool: {
@@ -123,12 +117,10 @@ const generators = {
         },
       },
     };
-    _match.bool.must.regexp[_processNode(comparison.symbol)] = _processNode(
-      comparison.value
-    );
+    _match.bool.must.regexp[_processNode(comparison.symbol)] = _processNode(comparison.value);
     return _match;
   },
-  '<'(node) {
+  "<"(node) {
     const comparison = _extractComparison(node);
     const _lt = {
       range: {},
@@ -138,7 +130,7 @@ const generators = {
     };
     return _lt;
   },
-  '<='(node) {
+  "<="(node) {
     const comparison = _extractComparison(node);
     const _lte = {
       range: {},
@@ -148,7 +140,7 @@ const generators = {
     };
     return _lte;
   },
-  '>'(node) {
+  ">"(node) {
     const comparison = _extractComparison(node);
     const _gt = {
       range: {},
@@ -158,7 +150,7 @@ const generators = {
     };
     return _gt;
   },
-  '>='(node) {
+  ">="(node) {
     const comparison = _extractComparison(node);
     const _gte = {
       range: {},
@@ -185,7 +177,7 @@ const _processNode = (node) => {
   return generators[node.type](node);
 };
 
-const compile = (tree) => {
+export const compile = (tree) => {
   const query = {
     query: { bool: {} },
   };

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const _firstChild = (node) => {
   return node.children[0];
@@ -15,19 +15,19 @@ const generators = {
   STRING: _identity,
   SYMBOL: (node) => {
     if (node.alone) {
-      return ['has', _identity(node)];
+      return ["has", _identity(node)];
     }
-    return ['get', _identity(node)];
+    return ["get", _identity(node)];
   },
 
-  '-'(node) {
+  "-"(node) {
     return -_firstChild(node).value;
   },
-  '&&'(node) {
-    return ['all', ...node.children.map(_processNode)];
+  "&&"(node) {
+    return ["all", ...node.children.map(_processNode)];
   },
-  '||'(node) {
-    return ['any', ...node.children.map(_processNode)];
+  "||"(node) {
+    return ["any", ...node.children.map(_processNode)];
   },
   ARRAY(node) {
     return node.children.map(_processNode);
@@ -38,33 +38,33 @@ const generators = {
 
     //return ['any', ...valueList.map((value) => ['==', field, value])];
 
-    return ['in', field, ['literal', valueList]];
+    return ["in", field, ["literal", valueList]];
   },
-  '!'(node) {
-    return ['!', _processNode(node.children[0])];
+  "!"(node) {
+    return ["!", _processNode(node.children[0])];
   },
-  '=='(node) {
-    return ['==', ...node.children.map(_processNode)];
+  "=="(node) {
+    return ["==", ...node.children.map(_processNode)];
   },
-  '!='(node) {
-    return ['!=', ...node.children.map(_processNode)];
+  "!="(node) {
+    return ["!=", ...node.children.map(_processNode)];
   },
   MATCH(node) {
-    const _match = ['in'];
+    const _match = ["in"];
     _match.push(_processNode(node.children[1]), _processNode(node.children[0]));
     return _match;
   },
-  '<'(node) {
-    return ['<', ...node.children.map(_processNode)];
+  "<"(node) {
+    return ["<", ...node.children.map(_processNode)];
   },
-  '<='(node) {
-    return ['<=', ...node.children.map(_processNode)];
+  "<="(node) {
+    return ["<=", ...node.children.map(_processNode)];
   },
-  '>'(node) {
-    return ['>', ...node.children.map(_processNode)];
+  ">"(node) {
+    return [">", ...node.children.map(_processNode)];
   },
-  '>='(node) {
-    return ['>=', ...node.children.map(_processNode)];
+  ">="(node) {
+    return [">=", ...node.children.map(_processNode)];
   },
   EXPRESSION(node) {
     return node.children.map(_processNode).flat();
@@ -79,7 +79,7 @@ const _processNode = (node) => {
   return generators[node.type](node);
 };
 
-const compile = (tree) => {
+export const compile = (tree) => {
   const query = {};
   query.filter = _processNode(tree);
   return query;

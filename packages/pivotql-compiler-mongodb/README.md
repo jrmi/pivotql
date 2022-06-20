@@ -12,8 +12,8 @@ npm install pivotql-compiler-mongodb
 
 ```js
 
-import parse from 'pivotql-parser-expression';
-import compile from 'pivotql-compiler-mongodb';
+import {parse} from 'pivotql-parser-expression';
+import {compile} from 'pivotql-compiler-mongodb';
 
 const query = '( height <= 20 or favorites.color == "green" ) and firstname in ["john", "doug"]';
 

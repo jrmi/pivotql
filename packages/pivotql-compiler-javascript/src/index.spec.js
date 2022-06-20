@@ -1,25 +1,25 @@
-'use strict';
+"use strict";
 
-import compiler from './index.js';
-import parser from 'pivotql-parser-expression';
+import compiler from "./index.js";
+import parser from "pivotql-parser-expression";
 
-describe('Basic types', () => {
-  test('NUMBER', () => {
-    expect(compiler({ type: 'NUMBER', value: 10 })).toEqual(10);
+describe("Basic types", () => {
+  test("NUMBER", () => {
+    expect(compiler({ type: "NUMBER", value: 10 })).toEqual(10);
   });
 });
 
-describe('Basic queries', () => {
+describe("Basic queries", () => {
   test('foo == "bar"', () => {
     const testFn = compiler(parser('foo == "bar"'));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
       })
     ).toBe(false);
   });
@@ -27,12 +27,12 @@ describe('Basic queries', () => {
     const testFn = compiler(parser('foo != "bar"'));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(false);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
       })
     ).toBe(true);
   });
@@ -40,17 +40,17 @@ describe('Basic queries', () => {
     const testFn = compiler(parser('not (foo != "bar")'));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
       })
     ).toBe(false);
   });
-  test('foo > 10', () => {
-    const testFn = compiler(parser('foo > 10'));
+  test("foo > 10", () => {
+    const testFn = compiler(parser("foo > 10"));
     expect(
       testFn({
         foo: 11,
@@ -62,8 +62,8 @@ describe('Basic queries', () => {
       })
     ).toBe(false);
   });
-  test('foo <= 42', () => {
-    const testFn = compiler(parser('foo <= 42'));
+  test("foo <= 42", () => {
+    const testFn = compiler(parser("foo <= 42"));
     expect(
       testFn({
         foo: 42,
@@ -75,8 +75,8 @@ describe('Basic queries', () => {
       })
     ).toBe(false);
   });
-  test('foo <= 42 and foo >= 12', () => {
-    const testFn = compiler(parser('foo <= 42 and foo >= 12'));
+  test("foo <= 42 and foo >= 12", () => {
+    const testFn = compiler(parser("foo <= 42 and foo >= 12"));
     expect(
       testFn({
         foo: 20,
@@ -93,28 +93,28 @@ describe('Basic queries', () => {
       })
     ).toBe(false);
   });
-  test('foo', () => {
-    const testFn = compiler(parser('foo'));
+  test("foo", () => {
+    const testFn = compiler(parser("foo"));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(true);
     expect(testFn({})).toBe(false);
   });
 });
 
-describe('Compound queries', () => {
+describe("Compound queries", () => {
   test('foo == "bar" and foo != "baz"', () => {
     const testFn = compiler(parser('foo == "bar" and foo != "baz"'));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
       })
     ).toBe(false);
   });
@@ -122,95 +122,91 @@ describe('Compound queries', () => {
     const testFn = compiler(parser('foo == "bar" or bar != 10'));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
         bar: 10,
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'yop',
+        foo: "yop",
         bar: 10,
       })
     ).toBe(false);
     expect(
       testFn({
-        foo: 'yop',
+        foo: "yop",
         bar: 11,
       })
     ).toBe(true);
   });
   test('foo == "bar" or bar != "baz" and bam == 10', () => {
-    const testFn = compiler(
-      parser('foo == "bar" or bar != "baz" and bam == 10')
-    );
+    const testFn = compiler(parser('foo == "bar" or bar != "baz" and bam == 10'));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
       })
     ).toBe(false);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
         bam: 10,
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'baz',
-        bar: 'baz',
+        foo: "baz",
+        bar: "baz",
         bam: 10,
       })
     ).toBe(false);
   });
   test('(foo == "bar" or bar != "baz") and bam == 10', () => {
-    const testFn = compiler(
-      parser('(foo == "bar" or bar != "baz") and bam == 10')
-    );
+    const testFn = compiler(parser('(foo == "bar" or bar != "baz") and bam == 10'));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(false);
     expect(
       testFn({
-        foo: 'baz',
-        bar: 'roo',
+        foo: "baz",
+        bar: "roo",
         bam: 10,
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'baz',
-        bar: 'baz',
+        foo: "baz",
+        bar: "baz",
         bam: 10,
       })
     ).toBe(false);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
         bam: 10,
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
         bam: 11,
       })
     ).toBe(false);
     expect(
       testFn({
-        foo: 'baz',
-        bar: 'baz',
+        foo: "baz",
+        bar: "baz",
         bam: 10,
       })
     ).toBe(false);
@@ -219,22 +215,22 @@ describe('Compound queries', () => {
     const testFn = compiler(parser('foo in ["bar", "baz"]'));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'poum',
+        foo: "poum",
       })
     ).toBe(false);
   });
-  test('foo in [10, 20]', () => {
-    const testFn = compiler(parser('foo in [10, 20]'));
+  test("foo in [10, 20]", () => {
+    const testFn = compiler(parser("foo in [10, 20]"));
     expect(
       testFn({
         foo: 10,
@@ -251,22 +247,22 @@ describe('Compound queries', () => {
       })
     ).toBe(false);
   });
-  test('foo and (bar or baz)', () => {
-    const testFn = compiler(parser('foo and (bar or baz)'));
+  test("foo and (bar or baz)", () => {
+    const testFn = compiler(parser("foo and (bar or baz)"));
     expect(
       testFn({
-        foo: 'bar',
+        foo: "bar",
       })
     ).toBe(false);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
         bar: true,
       })
     ).toBe(true);
     expect(
       testFn({
-        foo: 'baz',
+        foo: "baz",
         baz: null,
       })
     ).toBe(true);

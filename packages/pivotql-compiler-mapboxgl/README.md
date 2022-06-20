@@ -12,8 +12,8 @@ npm install pivotql-compiler-mapboxgl
 
 ```js
 
-import parse from 'pivotql-parser-expression';
-import compile from 'pivotql-compiler-mapboxgl';
+import {parse} from 'pivotql-parser-expression';
+import {compile} from 'pivotql-compiler-mapboxgl';
 
 const query = '( height <= 20 or favorites.color == "green" ) and firstname in ["john", "doug"]';
 

@@ -1,22 +1,22 @@
-'use strict';
+"use strict";
 
-import compiler from './index.js';
-import parser from 'pivotql-parser-expression';
+import compiler from "./index.js";
+import parser from "pivotql-parser-expression";
 
-describe('Basic types', () => {
-  test('NUMBER', () => {
-    expect(compiler({ type: 'NUMBER', value: 10 })).toEqual({
+describe("Basic types", () => {
+  test("NUMBER", () => {
+    expect(compiler({ type: "NUMBER", value: 10 })).toEqual({
       query: { bool: { filter: 10 } },
     });
   });
 });
 
-describe('Basic queries', () => {
+describe("Basic queries", () => {
   test('foo == "bar"', () => {
     expect(compiler(parser('foo == "bar"'))).toEqual({
       query: {
         bool: {
-          filter: { term: { 'foo.keyword': 'bar' } },
+          filter: { term: { "foo.keyword": "bar" } },
         },
       },
     });
@@ -25,35 +25,32 @@ describe('Basic queries', () => {
     expect(compiler(parser('foo != "bar"'))).toEqual({
       query: {
         bool: {
-          filter: { bool: { must_not: [{ term: { 'foo.keyword': 'bar' } }] } },
+          filter: { bool: { must_not: [{ term: { "foo.keyword": "bar" } }] } },
         },
       },
     });
   });
-  test('foo <= 42 and foo >= 12', () => {
-    expect(compiler(parser('foo <= 42 and foo >= 12'))).toEqual({
+  test("foo <= 42 and foo >= 12", () => {
+    expect(compiler(parser("foo <= 42 and foo >= 12"))).toEqual({
       query: {
         bool: {
           filter: {
             bool: {
-              must: [
-                { range: { foo: { lte: 42 } } },
-                { range: { foo: { gte: 12 } } },
-              ],
+              must: [{ range: { foo: { lte: 42 } } }, { range: { foo: { gte: 12 } } }],
             },
           },
         },
       },
     });
   });
-  test('foo', () => {
-    expect(compiler(parser('foo'))).toEqual({
-      query: { bool: { filter: { exists: { field: 'foo' } } } },
+  test("foo", () => {
+    expect(compiler(parser("foo"))).toEqual({
+      query: { bool: { filter: { exists: { field: "foo" } } } },
     });
   });
 });
 
-describe('Compound queries', () => {
+describe("Compound queries", () => {
   test('foo == "bar" and foo != "baz"', () => {
     expect(compiler(parser('foo == "bar" and foo != "baz"'))).toEqual({
       query: {
@@ -61,8 +58,8 @@ describe('Compound queries', () => {
           filter: {
             bool: {
               must: [
-                { term: { 'foo.keyword': 'bar' } },
-                { bool: { must_not: [{ term: { 'foo.keyword': 'baz' } }] } },
+                { term: { "foo.keyword": "bar" } },
+                { bool: { must_not: [{ term: { "foo.keyword": "baz" } }] } },
               ],
             },
           },
@@ -77,7 +74,7 @@ describe('Compound queries', () => {
           filter: {
             bool: {
               should: [
-                { term: { 'foo.keyword': 'bar' } },
+                { term: { "foo.keyword": "bar" } },
                 { bool: { must_not: [{ term: { bar: 10 } }] } },
               ],
             },
@@ -87,21 +84,19 @@ describe('Compound queries', () => {
     });
   });
   test('foo == "bar" or foo != "baz" and bam == 10', () => {
-    expect(
-      compiler(parser('foo == "bar" or foo != "baz" and bam == 10'))
-    ).toEqual({
+    expect(compiler(parser('foo == "bar" or foo != "baz" and bam == 10'))).toEqual({
       query: {
         bool: {
           filter: {
             bool: {
               should: [
-                { term: { 'foo.keyword': 'bar' } },
+                { term: { "foo.keyword": "bar" } },
                 {
                   bool: {
                     must: [
                       {
                         bool: {
-                          must_not: [{ term: { 'foo.keyword': 'baz' } }],
+                          must_not: [{ term: { "foo.keyword": "baz" } }],
                         },
                       },
                       { term: { bam: 10 } },
@@ -116,9 +111,7 @@ describe('Compound queries', () => {
     });
   });
   test('(foo == "bar" or foo != "baz") and bam == 10', () => {
-    expect(
-      compiler(parser('(foo == "bar" or foo != "baz") and bam == 10'))
-    ).toEqual({
+    expect(compiler(parser('(foo == "bar" or foo != "baz") and bam == 10'))).toEqual({
       query: {
         bool: {
           filter: {
@@ -127,10 +120,10 @@ describe('Compound queries', () => {
                 {
                   bool: {
                     should: [
-                      { term: { 'foo.keyword': 'bar' } },
+                      { term: { "foo.keyword": "bar" } },
                       {
                         bool: {
-                          must_not: [{ term: { 'foo.keyword': 'baz' } }],
+                          must_not: [{ term: { "foo.keyword": "baz" } }],
                         },
                       },
                     ],
@@ -152,10 +145,7 @@ describe('Compound queries', () => {
             bool: {
               must: {
                 bool: {
-                  should: [
-                    { term: { 'foo.keyword': 'bar' } },
-                    { term: { 'foo.keyword': 'baz' } },
-                  ],
+                  should: [{ term: { "foo.keyword": "bar" } }, { term: { "foo.keyword": "baz" } }],
                 },
               },
             },
@@ -164,8 +154,8 @@ describe('Compound queries', () => {
       },
     });
   });
-  test('foo in [10, 20]', () => {
-    expect(compiler(parser('foo in [10, 20]'))).toEqual({
+  test("foo in [10, 20]", () => {
+    expect(compiler(parser("foo in [10, 20]"))).toEqual({
       query: {
         bool: {
           filter: {
@@ -181,20 +171,17 @@ describe('Compound queries', () => {
       },
     });
   });
-  test('foo and (bar or baz)', () => {
-    expect(compiler(parser('foo and (bar or baz)'))).toEqual({
+  test("foo and (bar or baz)", () => {
+    expect(compiler(parser("foo and (bar or baz)"))).toEqual({
       query: {
         bool: {
           filter: {
             bool: {
               must: [
-                { exists: { field: 'foo' } },
+                { exists: { field: "foo" } },
                 {
                   bool: {
-                    should: [
-                      { exists: { field: 'bar' } },
-                      { exists: { field: 'baz' } },
-                    ],
+                    should: [{ exists: { field: "bar" } }, { exists: { field: "baz" } }],
                   },
                 },
               ],

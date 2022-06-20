@@ -12,8 +12,8 @@ npm install pivotql-compiler-javascript
 
 ```js
 
-import parse from 'pivotql-parser-expression';
-import compile from 'pivotql-compiler-javascript';
+import {parse} from 'pivotql-parser-expression';
+import {compile} from 'pivotql-compiler-javascript';
 
 const query = '( height <= 20 or favorites.color == "green" ) and firstname in ["john", "doug"]';
 
