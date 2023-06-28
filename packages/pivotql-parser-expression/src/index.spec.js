@@ -302,6 +302,30 @@ describe("symbol", () => {
       type: "SYMBOL",
     });
   });
+
+  test("Symbol with number", () => {
+    expect(pivotql("foo42")).toEqual({
+      alone: true,
+      value: "foo42",
+      type: "SYMBOL",
+    });
+  });
+
+  test("Symbol with number and underscore", () => {
+    expect(pivotql("foo_42")).toEqual({
+      alone: true,
+      value: "foo_42",
+      type: "SYMBOL",
+    });
+  });
+
+  test("Symbol starting with a number", () => {
+    expect(pivotql("42foo")).toEqual({
+      alone: true,
+      value: "42foo",
+      type: "SYMBOL",
+    });
+  });
 });
 
 describe("expressions", () => {
